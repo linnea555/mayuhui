@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>马钰惠 · 个人作品集</title>
+<meta name="description" content="马钰惠个人作品集：资源循环科学与工程本科在读，AI训练师认证，专注AI辅助开发与跨平台游戏开发。" />
+<meta name="keywords" content="马钰惠, 个人作品集, AI训练师, 前端开发, 游戏开发" />
+<style>
+/* 样式完全保留，未作任何修改 */
+:root {
+  --forest-mist: #FDFBEF; --forest-fog: #ECFDF5; --forest-leaf: #10B981; --forest-deep: #059669;
+  --forest-pine: #064E3B; --forest-pine2: #065F46; --forest-sun: #FBBF24; --forest-sunlite: #FCD34D;
+  --forest-ink: #1F2937; --forest-inksub: #6B7280; --forest-inkfaint: #9CA3AF;
+  --forest-snow: #F9FAFB; --forest-snowsub: #D1D5DB;
+  --txt: var(--forest-snow); --txt-sub: var(--forest-snowsub); --txt-faint: var(--forest-inkfaint);
+  --card-bg: rgba(6,78,59,0.7); --card-bd: rgba(16,185,129,0.3);
+}
+[data-theme="light"] {
+  --txt: var(--forest-ink); --txt-sub: var(--forest-inksub); --txt-faint: var(--forest-inkfaint);
+  --card-bg: rgba(255,255,255,0.7); --card-bd: rgba(16,185,129,0.2);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--txt); min-height: 100vh; transition: color 0.5s;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; }
+a { text-decoration: none; color: inherit; }
+img { display: block; }
+svg { fill: currentColor; }
+
+.forest-bg { position: fixed; inset: 0; z-index: -10; overflow: hidden; pointer-events: none; }
+.forest-base {
+  position: absolute; inset: 0; transform: scale(1.1); background-size: cover; background-position: center;
+  filter: blur(10px); transition: opacity 0.7s; animation: forest-pan 26s ease-in-out infinite;
+}
+.forest-tint { position: absolute; inset: 0; background: rgba(6,78,59,0.7); transition: background 0.7s; }
+[data-theme="light"] .forest-tint { background: rgba(254,252,232,0.6); }
+.forest-rays {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  opacity: 0.4; filter: blur(3px); mix-blend-mode: soft-light; animation: leaf-drift 20s ease-in-out infinite;
+}
+.tree-left, .tree-right { position: absolute; top: 0; height: 100%; width: 46%; background-size: cover; background-position: center; filter: blur(6px); opacity: 0.45; }
+.tree-left { left: -12%; animation: sway-left 9s ease-in-out infinite;
+  -webkit-mask-image: linear-gradient(to right, black 30%, transparent 95%); mask-image: linear-gradient(to right, black 30%, transparent 95%); }
+.tree-right { right: -12%; animation: sway-right 11s ease-in-out infinite;
+  -webkit-mask-image: linear-gradient(to left, black 30%, transparent 95%); mask-image: linear-gradient(to left, black 30%, transparent 95%); }
+.glow-a, .glow-b { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: leaf-drift 20s ease-in-out infinite; }
+.glow-a { top: 8%; left: 8%; width: 420px; height: 420px; background: radial-gradient(circle, rgba(251,191,36,0.35) 0%, transparent 70%); }
+.glow-b { top: 58%; right: 6%; width: 320px; height: 320px; background: radial-gradient(circle, rgba(16,185,129,0.28) 0%, transparent 70%); animation-delay: -6s; }
+.dust { position: absolute; border-radius: 50%; animation: dust-rise linear infinite; }
+
+.sunlight {
+  position: fixed; top: 0; left: 0; z-index: 0; width: 520px; height: 520px; border-radius: 50%;
+  pointer-events: none; mix-blend-mode: soft-light; transform: translate(-600px, -600px);
+  background: radial-gradient(circle, rgba(255,247,214,0.95) 0%, rgba(252,211,77,0.45) 32%, rgba(251,191,36,0.18) 55%, transparent 72%);
+}
+
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40; height: 64px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  border-bottom: 1px solid var(--card-bd); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  background: rgba(6,78,59,0.8); transition: background 0.3s, border-color 0.3s;
+}
+[data-theme="light"] .navbar { background: rgba(255,255,255,0.75); }
+.nav-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.125rem; color: var(--forest-fog); }
+[data-theme="light"] .nav-brand { color: var(--forest-deep); }
+.nav-brand .logo { width: 32px; height: 32px; border-radius: 8px; background: var(--forest-leaf); color: #fff; display: flex; align-items: center; justify-content: center; }
+.nav-links { display: none; align-items: center; gap: 28px; }
+.nav-links a { position: relative; font-size: 0.875rem; font-weight: 500; color: var(--txt-sub); transition: color 0.2s; }
+.nav-links a:hover { color: var(--forest-leaf); }
+.nav-links a::after { content: ""; position: absolute; bottom: -4px; left: 0; height: 2px; width: 0; background: var(--forest-leaf); transition: width 0.3s; }
+.nav-links a:hover::after { width: 100%; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-actions .lang-btn { height: 36px; padding: 0 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; transition: all 0.2s; background: var(--forest-pine2); color: var(--forest-snowsub); }
+.nav-actions .lang-btn:hover { background: var(--forest-leaf); color: #fff; transform: scale(1.1); }
+.nav-actions .icon-btn { width: 36px; height: 36px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--forest-pine2); color: var(--forest-snow); }
+.nav-actions .icon-btn:hover { background: var(--forest-leaf); color: #fff; transform: scale(1.1); }
+[data-theme="light"] .nav-actions .lang-btn { background: var(--forest-fog); color: var(--forest-ink); }
+[data-theme="light"] .nav-actions .icon-btn { background: var(--forest-fog); color: var(--forest-ink); }
+.nav-actions .print-btn { display: none; }
+.nav-actions .menu-btn { display: flex; }
+
+main { position: relative; z-index: 10; max-width: 1152px; margin: 0 auto; padding: 0 16px 48px; }
+
+.hero { text-align: center; padding: 112px 16px 32px; }
+.badge-wrap { display: flex; justify-content: center; margin-bottom: 40px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 9999px;
+  border: 1px solid var(--card-bd); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  font-size: 0.875rem; margin-bottom: 24px; background: rgba(6,78,59,0.7); color: var(--forest-sunlite);
+}
+[data-theme="light"] .hero-badge { background: rgba(255,255,255,0.7); color: var(--forest-deep); }
+.hero h1 {
+  font-size: 3rem; font-weight: 800; margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--forest-deep), var(--forest-leaf), var(--forest-sun));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero-sub { font-size: 1.25rem; max-width: 672px; margin: 0 auto 32px; line-height: 1.625; color: var(--txt-sub); }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 32px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--forest-leaf); color: #fff; box-shadow: 0 4px 14px rgba(16,185,129,0.4); }
+.btn-primary:hover { background: var(--forest-deep); box-shadow: 0 6px 20px rgba(16,185,129,0.5); }
+.btn-secondary { border: 1px solid var(--card-bd); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(6,78,59,0.7); color: var(--forest-snow); }
+.btn-secondary:hover { background: var(--forest-pine2); }
+[data-theme="light"] .btn-secondary { background: rgba(255,255,255,0.7); color: var(--forest-ink); }
+[data-theme="light"] .btn-secondary:hover { background: var(--forest-fog); }
+.skill-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.skill-badges span {
+  padding: 6px 14px; border-radius: 9999px; border: 1px solid var(--card-bd); font-size: 0.75rem; font-weight: 500;
+  transition: all 0.2s; cursor: default; background: rgba(6,78,59,0.7); color: var(--forest-snowsub); backdrop-filter: blur(12px);
+}
+.skill-badges span:hover { transform: translateY(-2px); background: var(--forest-leaf); color: #fff; border-color: var(--forest-leaf); }
+[data-theme="light"] .skill-badges span { background: rgba(255,255,255,0.7); color: var(--forest-inksub); }
+
+.section { margin-bottom: 64px; opacity: 0; transform: translateY(32px); transition: all 0.7s ease-out; }
+.section.visible { opacity: 1; transform: translateY(0); }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.section-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--forest-leaf); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 4px 14px rgba(16,185,129,0.4); }
+.section-title { font-size: 1.5rem; font-weight: 700; color: var(--txt); }
+
+.card { border-radius: 16px; border: 1px solid var(--card-bd); background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+.highlights-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.highlight-card { padding: 24px; text-align: center; transition: all 0.3s; }
+.highlight-card:hover { transform: translateY(-4px); border-color: var(--forest-leaf); box-shadow: 0 12px 40px rgba(6,78,59,0.25); }
+.highlight-number { font-size: 1.875rem; font-weight: 800; color: var(--forest-leaf); margin-bottom: 4px; }
+.highlight-label { font-size: 0.875rem; font-weight: 500; color: var(--txt-sub); }
+.highlight-desc { font-size: 0.75rem; margin-top: 4px; color: var(--txt-faint); }
+
+.tabs { overflow: hidden; }
+.tabs-header { display: flex; border-bottom: 1px solid var(--card-bd); }
+.tab-btn { flex: 1; padding: 16px 0; font-size: 0.875rem; font-weight: 600; position: relative; transition: color 0.2s, background 0.2s; color: var(--txt-sub); }
+.tab-btn:hover { color: var(--forest-leaf); background: rgba(6,95,70,0.6); }
+[data-theme="light"] .tab-btn:hover { background: rgba(236,253,245,0.7); }
+.tab-btn.active { color: var(--forest-leaf); }
+.tab-btn.active::after { content: ""; position: absolute; bottom: 0; left: 20%; right: 20%; height: 3px; border-radius: 3px 3px 0 0; background: var(--forest-leaf); }
+.tabs-content { padding: 24px; }
+.tab-panel { animation: fadein 0.35s ease; }
+
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: rgba(16,185,129,0.3); }
+.timeline-item { position: relative; }
+.timeline-item + .timeline-item { margin-top: 28px; }
+.timeline-dot { position: absolute; left: -29px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--forest-leaf); border: 3px solid #064E3B; box-shadow: 0 0 0 3px rgba(52,211,153,0.5); }
+[data-theme="light"] .timeline-dot { border-color: #ffffff; }
+.timeline-date { font-size: 0.75rem; font-weight: 600; color: var(--forest-leaf); margin-bottom: 2px; }
+.timeline-title { font-size: 1rem; font-weight: 700; color: var(--txt); }
+.timeline-company { font-size: 0.875rem; margin-bottom: 6px; color: var(--txt-sub); }
+.timeline-desc { font-size: 0.875rem; line-height: 1.625; color: var(--txt-sub); }
+
+.projects-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+.project-card { overflow: hidden; transition: all 0.3s; }
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(6,78,59,0.28); }
+.project-image { height: 128px; background: linear-gradient(135deg, var(--forest-fog), var(--forest-leaf)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.project-content { padding: 20px; }
+.project-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 8px; color: var(--txt); }
+.project-tech { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.tech-tag { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; background: var(--forest-pine2); color: var(--forest-sunlite); }
+[data-theme="light"] .tech-tag { background: var(--forest-fog); color: var(--forest-deep); }
+.project-desc { font-size: 0.875rem; line-height: 1.625; margin-bottom: 16px; color: var(--txt-sub); }
+.project-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 600; color: var(--forest-leaf); }
+.project-link:hover { text-decoration: underline; }
+.project-internal { display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; color: var(--txt-faint); }
+
+.skills-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+.skill-category { padding: 20px; }
+.skill-category-title { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 700; margin-bottom: 16px; color: var(--forest-sunlite); }
+[data-theme="light"] .skill-category-title { color: var(--forest-deep); }
+.skill-category-title .cat-icon { color: var(--forest-leaf); display: inline-flex; }
+.skill-item { margin-bottom: 12px; }
+.skill-item:last-child { margin-bottom: 0; }
+.skill-header { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.875rem; }
+.skill-name { color: var(--txt); }
+.skill-level { font-size: 0.75rem; color: var(--txt-faint); }
+.skill-bar { height: 6px; border-radius: 9999px; overflow: hidden; background: var(--forest-pine2); }
+[data-theme="light"] .skill-bar { background: var(--forest-fog); }
+.skill-progress { height: 100%; border-radius: 9999px; background: linear-gradient(to right, var(--forest-leaf), #34D399); transition: width 1s ease-out; width: 0; }
+
+.edu-card { padding: 24px; display: flex; gap: 20px; align-items: flex-start; transition: all 0.3s; margin-bottom: 24px; }
+.edu-card:hover { transform: translateX(4px); border-color: var(--forest-leaf); }
+.edu-icon { width: 48px; height: 48px; border-radius: 16px; background: var(--forest-leaf); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(16,185,129,0.4); }
+.edu-school { font-size: 1.125rem; font-weight: 700; color: var(--txt); }
+.edu-major { font-size: 0.875rem; font-weight: 600; color: var(--forest-leaf); margin-bottom: 2px; }
+.edu-time { font-size: 0.75rem; margin-bottom: 8px; color: var(--txt-faint); }
+.edu-courses { font-size: 0.875rem; line-height: 1.625; color: var(--txt-sub); }
+.cert-item { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; transition: all 0.3s; }
+.cert-item:hover { transform: translateX(4px); background: var(--forest-pine2); }
+[data-theme="light"] .cert-item:hover { background: var(--forest-fog); }
+.cert-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--forest-sun); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(251,191,36,0.45); }
+.cert-title { font-size: 0.875rem; font-weight: 600; color: var(--txt); }
+.cert-date { font-size: 0.75rem; color: var(--txt-faint); }
+.cert-number { font-size: 11px; font-family: monospace; letter-spacing: 0.05em; margin-top: 2px; opacity: 0.8; color: var(--txt-faint); }
+
+footer { position: relative; z-index: 10; text-align: center; padding: 32px 0; font-size: 0.875rem; border-top: 1px solid var(--card-bd); color: var(--txt-faint); }
+footer p + p { margin-top: 8px; font-size: 0.75rem; }
+
+.back-top {
+  position: fixed; bottom: 24px; right: 24px; z-index: 40; width: 44px; height: 44px; border-radius: 50%;
+  background: var(--forest-leaf); color: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(16,185,129,0.45); transition: all 0.3s; opacity: 0; pointer-events: none;
+}
+.back-top.visible { opacity: 1; pointer-events: auto; }
+.back-top:hover { background: var(--forest-deep); transform: translateY(-2px); }
+
+.toast {
+  position: fixed; bottom: 144px; right: 24px; z-index: 50; padding: 12px 20px; border-radius: 8px;
+  font-size: 0.875rem; color: #fff; transition: all 0.3s; opacity: 0; transform: translateY(20px); pointer-events: none;
+  background: var(--forest-snow); color: var(--forest-pine);
+}
+[data-theme="light"] .toast { background: var(--forest-ink); color: #fff; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+.badge-scene { position: relative; width: 280px; perspective: 1100px; user-select: none; }
+.badge-3d { transform-style: preserve-3d; }
+.badge-card { position: relative; transform-style: preserve-3d; transition: transform 0.12s linear; will-change: transform; }
+.clip-wrap { display: flex; justify-content: center; position: relative; z-index: 20; pointer-events: none; }
+.clip-body {
+  position: relative; width: 56px; height: 76px; margin-bottom: -28px; border-radius: 16px 16px 8px 8px;
+  background: linear-gradient(100deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 30%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.14) 72%, rgba(255,255,255,0.42) 100%);
+  border: 2px solid rgba(255,255,255,0.45);
+  box-shadow: inset 2px 0 4px rgba(255,255,255,0.4), inset -2px 0 4px rgba(255,255,255,0.3), inset 0 2px 2px rgba(255,255,255,0.8), 0 2px 8px rgba(0,0,0,0.35);
+}
+.clip-hole { width: 24px; height: 24px; margin: 12px auto 0; border-radius: 50%; background: rgba(6,14,10,0.7);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,0.9), inset 0 -1px 1px rgba(255,255,255,0.2), 0 1px 0 rgba(255,255,255,0.5); }
+.clip-tongue {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 32px; height: 36px; border-radius: 0 0 8px 8px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.12) 60%, rgba(255,255,255,0.24) 100%);
+  border: 1.5px solid rgba(255,255,255,0.4); border-top: none;
+  box-shadow: inset 0 -2px 2px rgba(255,255,255,0.4), inset 2px 0 2px rgba(255,255,255,0.25), inset -2px 0 2px rgba(255,255,255,0.25);
+}
+.sleeve {
+  position: relative; border-radius: 28px; padding: 44px 14px 14px;
+  background: linear-gradient(150deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 28%, rgba(255,255,255,0.04) 62%, rgba(255,255,255,0.12) 100%);
+  border: 2px solid rgba(255,255,255,0.55);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 6px 18px rgba(0,0,0,0.35), inset 0 0 0 5px rgba(255,255,255,0.08), inset 0 0 0 6px rgba(255,255,255,0.22), inset 0 3px 3px rgba(255,255,255,0.65), inset 0 -4px 7px rgba(255,255,255,0.18), inset 5px 0 9px rgba(255,255,255,0.2), inset -5px 0 9px rgba(255,255,255,0.2);
+}
+.sleeve-light {
+  position: absolute; inset: 0; border-radius: 28px; pointer-events: none;
+  background: radial-gradient(130% 55% at 50% -12%, rgba(255,255,255,0.28) 0%, transparent 55%), radial-gradient(130% 45% at 50% 112%, rgba(255,255,255,0.12) 0%, transparent 50%), linear-gradient(100deg, rgba(255,255,255,0.14) 0%, transparent 12%, transparent 88%, rgba(255,255,255,0.1) 100%);
+}
+.sleeve-hole {
+  position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 40px; height: 15px; border-radius: 9999px; z-index: 10; pointer-events: none;
+  background: rgba(4,10,8,0.75);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,0.9), inset 0 -1px 1px rgba(255,255,255,0.15), 0 1px 0 rgba(255,255,255,0.4);
+}
+.photo-frame { position: relative; border-radius: 16px; overflow: hidden; transform: translateZ(20px); }
+.photo-area { position: relative; height: 330px; }
+.photo-bg { position: absolute; inset: 0; background: linear-gradient(165deg, #16212c 0%, #101820 45%, #0b1016 100%); }
+.photo-area img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; filter: contrast(1.12) saturate(1.18) brightness(1.06); }
+.holo-mask {
+  position: absolute; inset: 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 22%, transparent 42%), linear-gradient(to bottom, black 0%, black 12%, transparent 30%);
+  mask-image: linear-gradient(to right, black 0%, black 22%, transparent 42%), linear-gradient(to bottom, black 0%, black 12%, transparent 30%);
+  -webkit-mask-composite: source-over; mask-composite: add;
+}
+.holo { position: absolute; background-size: 200% 100%; mix-blend-mode: screen; }
+.holo-a { top: -14%; left: -16%; width: 42%; height: 42%; transform: rotate(30deg); filter: blur(12px) saturate(1.4); opacity: 0.7; }
+.holo-b { top: 34%; left: -22%; width: 34%; height: 34%; transform: rotate(28deg); filter: blur(13px) saturate(1.3); opacity: 0.55; }
+.holo-c { bottom: -12%; left: -14%; width: 32%; height: 32%; transform: rotate(26deg); filter: blur(12px) saturate(1.3); opacity: 0.5; }
+.photo-sheen {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, rgba(255,255,255,0.12) 0%, transparent 16%, transparent 84%, rgba(255,255,255,0.06) 94%, transparent 100%);
+}
+.badge-shadow { margin: 24px auto 0; height: 16px; width: 160px; border-radius: 100%; background: rgba(0,0,0,0.45); filter: blur(16px); }
+
+@keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes forest-pan { 0%,100% { transform: scale(1.18) translate(0,0); } 33% { transform: scale(1.22) translate(-8px,-5px); } 66% { transform: scale(1.2) translate(7px,4px); } }
+@keyframes sway-left { 0%,100% { transform: translateX(0) rotate(0deg); } 50% { transform: translateX(14px) rotate(0.6deg); } }
+@keyframes sway-right { 0%,100% { transform: translateX(0) rotate(0deg); } 50% { transform: translateX(-14px) rotate(-0.6deg); } }
+@keyframes leaf-drift { 0%,100% { transform: translate(0,0) rotate(0deg); } 25% { transform: translate(10px,-8px) rotate(2deg); } 50% { transform: translate(-8px,6px) rotate(-2deg); } 75% { transform: translate(6px,10px) rotate(1deg); } }
+@keyframes dust-rise { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: 0.9; } 85% { opacity: 0.5; } 100% { transform: translateY(-46vh) translateX(24px); opacity: 0; } }
+
+@media (min-width: 640px) {
+  .highlights-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-actions .print-btn { display: flex; }
+}
+@media (min-width: 768px) {
+  .nav-links { display: flex; }
+  .nav-actions .menu-btn { display: none; }
+  main { padding: 0 24px 48px; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .highlights-grid { grid-template-columns: repeat(4, 1fr); }
+  .projects-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media print {
+  .navbar, .back-top, .sunlight, .toast, .hero-actions { display: none !important; }
+  .forest-bg { display: none !important; }
+  body { background: #fff; color: #000; }
+  .section { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="forest-bg" aria-hidden="true">
+  <div class="forest-base" id="forest-base"></div>
+  <div class="forest-tint"></div>
+  <div class="forest-rays" id="forest-rays"></div>
+  <div class="tree-left" id="tree-left"></div>
+  <div class="tree-right" id="tree-right"></div>
+  <div class="glow-a"></div>
+  <div class="glow-b"></div>
+  <div id="dust-box"></div>
+</div>
+<div class="sunlight" id="sunlight" aria-hidden="true"></div>
+
+<nav class="navbar" aria-label="主导航">
+  <a href="#top" class="nav-brand"><span class="logo" id="i-leaf"></span><span data-i18n="name">马钰惠</span></a>
+  <div class="nav-links">
+    <a href="#highlights" data-i18n="nav_highlights">亮点</a>
+    <a href="#experience" data-i18n="nav_experience">经历</a>
+    <a href="#projects" data-i18n="nav_projects">项目</a>
+    <a href="#skills" data-i18n="nav_skills">技能</a>
+    <a href="#education" data-i18n="nav_education">教育</a>
+  </div>
+  <div class="nav-actions">
+    <button class="lang-btn" id="lang-btn" aria-label="Switch language">EN</button>
+    <button class="icon-btn" id="theme-btn" aria-label="切换主题"></button>
+    <button class="icon-btn print-btn" id="print-btn" aria-label="打印简历"></button>
+    <button class="icon-btn menu-btn" id="menu-btn" aria-label="菜单"></button>
+  </div>
+</nav>
+
+<main id="top">
+  <header class="hero">
+    <div class="badge-wrap">
+      <div class="badge-scene" id="badge-scene">
+        <div class="badge-3d">
+          <div class="badge-card" id="badge-card">
+            <div class="clip-wrap">
+              <div class="clip-body">
+                <div class="clip-hole"></div>
+                <div class="clip-tongue"></div>
+              </div>
+            </div>
+            <div class="sleeve">
+              <div class="sleeve-light"></div>
+              <div class="sleeve-hole"></div>
+              <div class="photo-frame">
+                <div class="photo-area">
+                  <div class="photo-bg"></div>
+                  <img id="avatar" alt="马钰惠" loading="eager" />
+                  <div class="holo-mask">
+                    <div class="holo holo-a" id="holo-a"></div>
+                    <div class="holo holo-b" id="holo-b"></div>
+                    <div class="holo holo-c" id="holo-c"></div>
+                  </div>
+                  <div class="photo-sheen"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="badge-shadow"></div>
+      </div>
+    </div>
+    <div class="hero-badge"><span id="i-cap"></span><span data-i18n="hero_badge">资源循环科学与工程 · AI训练师认证</span></div>
+    <h1 data-i18n="name">马钰惠</h1>
+    <p class="hero-sub" data-i18n="hero_subtitle"></p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="copy-phone"><span id="i-mobile"></span><span data-i18n="copy_phone">复制手机号</span></button>
+      <button class="btn btn-secondary" id="copy-wechat"><span id="i-comment"></span><span data-i18n="copy_wechat">复制微信</span></button>
+      <a class="btn btn-primary" id="github-link" target="_blank" rel="noreferrer"><span id="i-github"></span>GitHub</a>
+      <button class="btn btn-secondary" id="copy-email"><span id="i-envelope"></span><span data-i18n="contact_email">复制邮箱</span></button>
+    </div>
+    <div class="skill-badges" id="skill-badges"></div>
+  </header>
+
+  <section class="section" id="highlights">
+    <div class="section-header"><span class="section-icon" id="i-magic"></span><h2 class="section-title" data-i18n="section_highlights">亮点成果</h2></div>
+    <div class="highlights-grid" id="highlights-grid"></div>
+  </section>
+
+  <section class="section" id="experience">
+    <div class="section-header"><span class="section-icon" id="i-briefcase"></span><h2 class="section-title" data-i18n="section_experience">经历</h2></div>
+    <div class="card tabs" id="tabs-exp">
+      <div class="tabs-header" role="tablist">
+        <button class="tab-btn active" data-tab="work" data-i18n="tab_work">工作/实习</button>
+        <button class="tab-btn" data-tab="campus" data-i18n="tab_campus">校园经历</button>
+      </div>
+      <div class="tabs-content">
+        <div class="tab-panel" data-panel="work"><div class="timeline" id="tl-work"></div></div>
+        <div class="tab-panel" data-panel="campus" style="display:none"><div class="timeline" id="tl-campus"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section-header"><span class="section-icon" id="i-rocket"></span><h2 class="section-title" data-i18n="section_projects">项目经历</h2></div>
+    <div class="card tabs" id="tabs-proj">
+      <div class="tabs-header" role="tablist">
+        <button class="tab-btn active" data-tab="game" data-i18n="tab_game">游戏开发</button>
+        <button class="tab-btn" data-tab="ai" data-i18n="tab_ai">AI应用</button>
+      </div>
+      <div class="tabs-content">
+        <div class="tab-panel" data-panel="game"><div class="projects-grid" id="pg-game"></div></div>
+        <div class="tab-panel" data-panel="ai" style="display:none"><div class="projects-grid" id="pg-ai"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="section-header"><span class="section-icon" id="i-toolbox"></span><h2 class="section-title" data-i18n="section_skills">技能矩阵</h2></div>
+    <div class="skills-grid" id="skills-grid"></div>
+  </section>
+
+  <section class="section" id="education">
+    <div class="section-header"><span class="section-icon" id="i-grad"></span><h2 class="section-title" data-i18n="section_education">教育与证书</h2></div>
+    <div class="card edu-card">
+      <span class="edu-icon" id="i-school"></span>
+      <div style="flex:1">
+        <div class="edu-school">山西科技学院</div>
+        <div class="edu-major" data-i18n="major"></div>
+        <div class="edu-time">2026.09 - 2030.06（预计）</div>
+        <div class="edu-courses" data-i18n="courses"></div>
+      </div>
+    </div>
+    <div class="card cert-item">
+      <span class="cert-icon" id="i-trophy"></span>
+      <div style="flex:1">
+        <div class="cert-title" data-i18n="cert_title"></div>
+        <div class="cert-date">2026.08</div>
+        <div class="cert-number" data-i18n="cert_number"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 <span data-i18n="name">马钰惠</span> · <span data-i18n="footer_update">最后更新</span>: 2026.08</p>
+  <p data-i18n="footer_desc"></p>
+</footer>
+
+<button class="back-top" id="back-top" aria-label="返回顶部"></button>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const IMG = {
+  base: "https://material-image.wanwang.xin/1106187155067293/public/93c60176-8de2-4f72-8c2a-3f7305741f0a.jpg",
+  left: "https://material-image.wanwang.xin/1106187155067293/public/3e5d2ac0-266e-49bc-b65b-b393061aff55.jpg",
+  rays: "https://material-image.wanwang.xin/1106187155067293/public/8896bff9-8a9e-428f-9267-33a06b132872.jpg",
+  dew: "https://material-image.wanwang.xin/1106187155067293/public/5f939c92-a0f9-42fc-8f9b-149d0f40f4bd.jpg",
+  leaves: "https://material-image.wanwang.xin/1106187155067293/public/e46ef80a-6608-4e26-a1c1-d1f0bb9e425b.jpg",
+  avatar: "https://material-image.wanwang.xin/1106187155067293/WS20260820002633000001/2a63f4f0-8b52-4e96-8a04-907a34974936.png",
+};
+
+const i18n = {
+  zh: {
+    name: "马钰惠", hero_badge: "资源循环科学与工程 · AI训练师认证",
+    hero_subtitle: "将环境工程的系统思维与AI技术深度融合，专注于跨学科创新应用。精通AI辅助开发与前端正向工程，独立交付高性能跨平台应用。",
+    nav_highlights: "亮点", nav_experience: "经历", nav_projects: "项目", nav_skills: "技能", nav_education: "教育",
+    contact_email: "复制邮箱", copy_phone: "复制手机号", copy_wechat: "复制微信",
+    section_highlights: "亮点成果", section_experience: "经历", section_projects: "项目经历", section_skills: "技能矩阵", section_education: "教育与证书",
+    tab_work: "工作/实习", tab_campus: "校园经历", tab_game: "游戏开发", tab_ai: "AI应用",
+    campus_title: "本科在读",
+    campus_desc: "专注跨学科学习，将环境工程系统思维与软件开发方法论结合，探索AI技术在资源优化与环保数字化领域的创新应用。",
+    major: "资源循环科学与工程 · 本科",
+    courses: "主修：化工原理、材料科学基础、资源循环工艺学、环境工程概论、Python程序设计、环境材料学、固体废弃物处理与处置",
+    cert_title: "阿里巴巴达摩院人工智能训练师（初级）", cert_number: "证书编号：AIT260814094623000150",
+    footer_update: "最后更新", footer_desc: "使用原生技术栈构建 · 森林主题设计",
+    work_title: "积极寻找机会中", work_company: "期待加入创新团队",
+    work_desc: "正在寻找实习/工作机会，希望能将AI技术与前端开发能力应用于实际项目。",
+    demo: "在线演示", internal: "内部项目",
+    skill_cat_ai: "AI与提示词工程", skill_cat_frontend: "前端开发", skill_cat_gamedev: "游戏开发", skill_cat_tools: "工程工具",
+    copied_email: "邮箱已复制", copied_phone: "手机号已复制", copied_wechat: "微信号已复制",
+    menu_tip: "请使用桌面版获得完整导航",
+    game1_title: "AI驱动的跨平台飞机大战",
+    game1_desc: "运用AI辅助开发，通过精准提示词工程生成核心逻辑，实现双端适配架构。采用四叉树碰撞检测，性能提升35%，动态难度调节，移动端深度优化。",
+    game2_title: "复古像素坦克战",
+    game2_desc: "复刻经典FC坦克大战，采用JSON关卡编辑器，敌人AI行为树（巡逻/追击/避障），道具系统，LocalStorage存档，60FPS流畅渲染。",
+    ai1_title: "AI辅助开发工作流",
+    ai1_desc: "构建完整的AI辅助开发流程，通过精准的提示词工程将开发周期缩短40%，代码复用率提升30%。建立从需求分析到代码审查的AI协同规范。",
+  },
+  en: {
+    name: "Ma Yuhui", hero_badge: "Resource Recycling Science · AI Trainer Certified",
+    hero_subtitle: "Bridging environmental systems thinking with AI technology. Expert in AI-assisted development and frontend engineering, delivering high-performance cross-platform applications.",
+    nav_highlights: "Highlights", nav_experience: "Experience", nav_projects: "Projects", nav_skills: "Skills", nav_education: "Education",
+    contact_email: "Copy Email", copy_phone: "Copy Phone Number", copy_wechat: "Copy WeChat",
+    section_highlights: "Key Achievements", section_experience: "Experience", section_projects: "Projects", section_skills: "Skills Matrix", section_education: "Education & Certifications",
+    tab_work: "Work/Internship", tab_campus: "Campus", tab_game: "Game Dev", tab_ai: "AI Apps",
+    campus_title: "Undergraduate Student",
+    campus_desc: "Focusing on interdisciplinary learning, combining environmental systems thinking with software development methodologies.",
+    major: "Resource Recycling Science & Engineering · BS",
+    courses: "Major: Chemical Principles, Material Science, Resource Recycling Technology, Environmental Engineering, Python Programming",
+    cert_title: "Alibaba DAMO Academy AI Trainer (Junior)", cert_number: "Certificate No.: AIT260814094623000150",
+    footer_update: "Last Updated", footer_desc: "Built with vanilla stack · Forest theme design",
+    work_title: "Open to Opportunities", work_company: "Seeking innovative teams",
+    work_desc: "Looking for internship/job opportunities to apply AI and frontend skills to real projects.",
+    demo: "Live Demo", internal: "Internal Project",
+    skill_cat_ai: "AI & Prompt Engineering", skill_cat_frontend: "Frontend Development", skill_cat_gamedev: "Game Development", skill_cat_tools: "Engineering Tools",
+    copied_email: "Email copied", copied_phone: "Phone number copied", copied_wechat: "WeChat ID copied",
+    menu_tip: "Please use desktop for full navigation",
+    game1_title: "AI-Powered Cross-Platform Aircraft Battle",
+    game1_desc: "AI-assisted development with precise prompt engineering. Quadtree collision detection (35% performance boost), dynamic difficulty, mobile-optimized.",
+    game2_title: "Retro Pixel Tank Battle",
+    game2_desc: "Classic FC tank battle remake with JSON level editor, enemy AI behavior tree, power-up system, and 60FPS rendering.",
+    ai1_title: "AI-Assisted Development Workflow",
+    ai1_desc: "Built complete AI-assisted dev pipeline reducing cycle by 40% and improving code reuse by 30% through precise prompt engineering.",
+  },
+};
+
+const resume = {
+  contact: { email: "3867491073@qq.com", phone: "18035571274", wechat: "myh18035571274", github: "https://github.com/linnea555" },
+  highlights: [
+    { number: "40%", label: { zh: "开发效率提升", en: "Efficiency Boost" }, desc: { zh: "AI辅助开发", en: "AI-Assisted Dev" } },
+    { number: "5000+", label: { zh: "代码行数", en: "Lines of Code" }, desc: { zh: "独立完成项目", en: "Independent Projects" } },
+    { number: "2", label: { zh: "跨平台游戏", en: "Cross-Platform Games" }, desc: { zh: "完整交付上线", en: "Shipped Products" } },
+    { number: "98%", label: { zh: "加载成功率", en: "Load Success Rate" }, desc: { zh: "3G网络环境", en: "3G Network" } },
+  ],
+  skills: {
+    ai: [{ name: "Prompt Engineering", level: 95, levelText: "精通" }, { name: "AI数据标注", level: 90, levelText: "熟练" }, { name: "ChatGPT/通义灵码", level: 92, levelText: "精通" }],
+    frontend: [{ name: "HTML5/CSS3/ES6+", level: 90, levelText: "精通" }, { name: "Canvas API", level: 88, levelText: "熟练" }, { name: "响应式设计", level: 85, levelText: "熟练" }],
+    gamedev: [{ name: "游戏循环与状态管理", level: 85, levelText: "熟练" }, { name: "碰撞检测算法", level: 82, levelText: "熟练" }, { name: "性能优化", level: 80, levelText: "良好" }],
+    tools: [{ name: "Git版本控制", level: 88, levelText: "熟练" }, { name: "VS Code/DevTools", level: 90, levelText: "精通" }, { name: "Netlify/Vercel", level: 85, levelText: "熟练" }],
+  },
+  badges: ["AI训练师认证", "Prompt Engineering", "Canvas 2D", "游戏开发", "跨端适配", "性能优化"],
+  projects: [
+    {
+      category: "game",
+      icon: "✈️",
+      title_zh: "AI驱动的跨平台飞机大战",
+      title_en: "AI-Powered Aircraft Battle",
+      tech: '["Canvas 2D", "ES6+", "响应式设计", "本地存储"]',
+      desc_zh: "运用AI辅助开发，通过精准提示词工程生成核心逻辑，实现双端适配架构。采用四叉树碰撞检测，性能提升35%，动态难度调节，移动端深度优化。",
+      desc_en: "AI-assisted development with precise prompt engineering. Quadtree collision detection (35% performance boost), dynamic difficulty, mobile-optimized.",
+      demo: true,
+      link: "https://fejii.netlify.app", // 已更新为正确链接
+    },
+    {
+      category: "game",
+      icon: "🎮",
+      title_zh: "复古像素坦克战",
+      title_en: "Retro Pixel Tank Battle",
+      tech: '["ES6模块化", "MVC架构", "AI行为树", "Web Audio API"]',
+      desc_zh: "复刻经典FC坦克大战，采用JSON关卡编辑器，敌人AI行为树（巡逻/追击/避障），道具系统，LocalStorage存档，60FPS流畅渲染。",
+      desc_en: "Classic FC tank battle remake with JSON level editor, enemy AI behavior tree, power-up system, and 60FPS rendering.",
+      demo: true,
+      link: "https://tankr.netlify.app",
+    },
+    {
+      category: "ai",
+      icon: "🤖",
+      title_zh: "AI辅助开发工作流",
+      title_en: "AI-Assisted Development Workflow",
+      tech: '["Prompt Engineering", "ChatGPT", "代码生成"]',
+      desc_zh: "构建完整的AI辅助开发流程，通过精准的提示词工程将开发周期缩短40%，代码复用率提升30%。建立从需求分析到代码审查的AI协同规范。",
+      desc_en: "Built complete AI-assisted dev pipeline reducing cycle by 40% and improving code reuse by 30% through precise prompt engineering.",
+      demo: false,
+    },
+  ],
+};
+
+const FA = {
+  leaf: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M440.65 12.57l4 82.77A247.16 247.16 0 0 0 355.25 56C255.83 8.57 165.8 108.32 212.5 208.11L47.23 373.4a23.36 23.36 0 0 0 0 33.1l58.3 58.3a23.46 23.46 0 0 0 33.1 0L303.9 299.5c99.8 46.7 199.54-43.32 152.12-142.74a247.2 247.2 0 0 0-39.37-57.42l82.77 4a24.43 24.43 0 0 0 25.23-25.23 24.43 24.43 0 0 0-22.77-24.3l-134.1-11.24A24.43 24.43 0 0 0 440.65 12.57z"/></svg>',
+  moon: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.362-71.68-238.362-199.124 0-52.58 18.872-100.832 50.4-138.44 7.213-8.606-.505-21.525-11.49-19.572C172.69 58.014 96 144.42 96 249.453 96 384.672 201.995 512 283.211 512z"/></svg>',
+  sun: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-22-22l-100.4 33.5-47.4-94.7c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7-100.4-33.5c-13.6-4.5-26.5 8.4-22 22l33.5 100.4-94.7 47.3c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.4c-4.5 13.6 8.4 26.5 22 22l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 22-22l-33.5-100.4 94.7-47.3c12.9-6.4 12.9-24.6.1-31z"/></svg>',
+  print: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M448 192V77.25c0-8.49-3.37-16.62-9.37-22.63L393.37 9.37c-6-6-14.14-9.37-22.63-9.37H96C78.33 0 64 14.33 64 32v160c-35.35 0-64 28.65-64 64v112c0 8.84 7.16 16 16 16h48v96c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-96h48c8.84 0 16-7.16 16-16V256c0-35.35-28.65-64-64-64zm-64 256H128v-96h256v96zm0-224H128V64h64v64h128V64h64v160zm64 96h-32v-32h32c8.82 0 16 7.18 16 16s-7.18 16-16 16z"/></svg>',
+  bars: '<svg viewBox="0 0 448 512" width="1em" height="1em"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>',
+  cap: '<svg viewBox="0 0 640 512" width="1em" height="1em"><path d="M623.1 136.9L339.5 21.1c-12.3-5-26.7-5-39 0L16.9 136.9C6.7 141.1 0 151 0 162s6.7 20.9 16.9 25.1l63.8 26.1c-8.6 12.9-14.3 27.6-16.9 43.2-9.4 5.5-15.8 15.5-15.8 27.6 0 11.8 6.2 21.7 15.2 27.4 3.3 23.8 13.5 75.1 56.2 94.7 9.1 4.2 19.7-1 21.6-10.8 1.6-8.2-2.9-16.3-10.7-19.9-23.7-10.9-31.4-45.6-33.7-61.4h31.5c3.2 22.9 13.2 55.9 39.4 68 9.1 4.2 19.7-1 21.6-10.8 1.6-8.2-2.9-16.3-10.7-19.9-12.1-5.6-19.6-21.7-23-37.3H192v76c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32v-76h64c17.7 0 32-14.3 32-32v-93.9l79.1-32.4c10.2-4.2 16.9-14.1 16.9-25.1s-6.7-20.9-16.9-25.1zM416 416H224v-64h192v64zm176-234.6l-96 39.4V192c0-17.7-14.3-32-32-32H176c-17.7 0-32 14.3-32 32v28.8l-96-39.4L320 32l272 149.4z"/></svg>',
+  mobile: '<svg viewBox="0 0 320 512" width="1em" height="1em"><path d="M272 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM160 480c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm112-108c0 6.6-5.4 12-12 12H60c-6.6 0-12-5.4-12-12V60c0-6.6 5.4-12 12-12h200c6.6 0 12 5.4 12 12v312z"/></svg>',
+  comment: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zM128 272c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/></svg>',
+  github: '<svg viewBox="0 0 496 512" width="1em" height="1em"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.3-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 15.7 17.6 23.3 31.4 23.3 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z"/></svg>',
+  envelope: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg>',
+  magic: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M224.7 305.3L362.6 443.2c8.3 8.3 21.8 8.3 30.2 0l60.3-60.3c8.3-8.3 8.3-21.8 0-30.2L315.3 214.8c-8.3-8.3-21.8-8.3-30.2 0l-60.4 60.4c-8.3 8.3-8.3 21.8 0 30.1zm165.8-58.9l-44.9-44.9 20.3-20.3 14.1-4.4 50.9-50.9-17-17-45.2 14.2-4.4 14.1-20.3 20.3-44.9-44.9 20.3-20.3 14.1-4.4 62.2-62.2c16.6-16.6 43.5-16.6 60 0l30 30c16.6 16.6 16.6 43.5 0 60l-62.2 62.2-14.1 4.4-18.9 20.1zM272 112l-18.5-55.5L198 38l55.5-18.5L272-36l18.5 55.5L346 38l-55.5 18.5L272 112zM112 272l-18.5 55.5L38 346l55.5 18.5L112 420l18.5-55.5L186 346l-55.5-18.5L112 272zM64 64L49.9 21.5 7.4 7.4l42.5-14.1L64-49.2l14.1 42.5 42.5 14.1-42.5 14.1L64 64z" transform="translate(0 49.2) scale(0.9)"/></svg>',
+  briefcase: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M320 336c0 8.84-7.16 16-16 16h-96c-8.84 0-16-7.16-16-16v-48H0v144c0 25.68 22.37 48 48 48h416c25.63 0 48-22.32 48-48V288H320v48zm144-208h-80V80c0-25.68-22.37-48-48-48H176c-25.63 0-48 22.32-48 48v48H48c-25.63 0-48 22.32-48 48v80h512v-80c0-25.68-22.37-48-48-48zm-144 0H192V96h128v32z"/></svg>',
+  rocket: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M505.1 19.1C503.8 13 499 8.2 492.9 6.9 460.7.3 435.5 0 410.4 0 307.2 0 245.3 55.2 199.1 128L94.9 180.1c-5.1 2.5-8.1 7.9-7.8 13.6.3 5.7 3.8 10.8 9 12.8l103.8 41.5c-2.8 9.1-5.1 18.4-6.8 27.9L49.6 419.4c-5.9 5.9-8.8 14.2-7.6 22.5l7.4 51.4c.9 6.3 5.9 11.3 12.2 12.2l51.4 7.4c8.3 1.2 16.6-1.6 22.5-7.6L279 361.8c9.5-1.7 18.8-4 27.9-6.8l41.5 103.8c2 5.2 7.1 8.7 12.8 9 5.7.3 11.1-2.7 13.6-7.8l52.1-104.2C499.8 309.6 512 247.7 512 144.5c0-25.1-.3-50.3-6.9-82.5zM304 256c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zM31.1 452.5c-8.8 8.8-22.1 10.2-27.6 4.7-5.5-5.5-4.1-18.8 4.7-27.6 8.8-8.8 22.1-10.2 27.6-4.7 5.5 5.5 4.1 18.8-4.7 27.6z" transform="scale(0.92) translate(22 22)"/></svg>',
+  toolbox: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M507.73 139.28c-3.14-3.08-7.36-4.8-11.73-4.8H384V96.52c0-8.79-3.61-17.22-10-23.52l-38.62-38C323.25 23.05 306.98 16 290 16h-68c-16.98 0-33.25 7.05-45.37 18.99L138 73c-6.39 6.3-10 14.73-10 23.52v37.96H16c-4.37 0-8.59 1.72-11.73 4.8C1.13 142.36-.4 146.63.06 151l19.25 181.5c2.53 23.84 22.65 41.96 46.63 41.96H192v-40c0-8.84 7.16-16 16-16h96c8.84 0 16 7.16 16 16v40h126.06c23.98 0 44.1-18.12 46.63-41.96L511.94 151c.46-4.37-1.07-8.64-4.21-11.72zM176 96.52l38.62-38C220.7 52.55 228.84 49 237.33 49h37.34c8.49 0 16.63 3.55 22.71 9.52l38.62 38v37.96H176V96.52zM352 448c0 17.64-14.36 32-32 32H192c-17.64 0-32-14.36-32-32v-41.54h192V448z"/></svg>',
+  grad: '<svg viewBox="0 0 640 512" width="1em" height="1em"><path d="M623.1 136.9L339.5 21.1c-12.3-5-26.7-5-39 0L16.9 136.9C6.7 141.1 0 151 0 162s6.7 20.9 16.9 25.1l63.8 26.1c-8.6 12.9-14.3 27.6-16.9 43.2-9.4 5.5-15.8 15.5-15.8 27.6 0 11.8 6.2 21.7 15.2 27.4 3.3 23.8 13.5 75.1 56.2 94.7 9.1 4.2 19.7-1 21.6-10.8 1.6-8.2-2.9-16.3-10.7-19.9-23.7-10.9-31.4-45.6-33.7-61.4h31.5c3.2 22.9 13.2 55.9 39.4 68 9.1 4.2 19.7-1 21.6-10.8 1.6-8.2-2.9-16.3-10.7-19.9-12.1-5.6-19.6-21.7-23-37.3H192v76c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32v-76h64c17.7 0 32-14.3 32-32v-93.9l79.1-32.4c10.2-4.2 16.9-14.1 16.9-25.1s-6.7-20.9-16.9-25.1zM416 416H224v-64h192v64zm176-234.6l-96 39.4V192c0-17.7-14.3-32-32-32H176c-17.7 0-32 14.3-32 32v28.8l-96-39.4L320 32l272 149.4z"/></svg>',
+  robot: '<svg viewBox="0 0 640 512" width="1em" height="1em"><path d="M416 320h-96c-17.6 0-32-14.4-32-32s14.4-32 32-32h96s16 14.4 16 32-14.4 32-16 32zm-176 0h-96c-17.6 0-32-14.4-32-32s14.4-32 32-32h96s16 14.4 16 32-14.4 32-16 32zm384-96v224c0 17.7-14.3 32-32 32H48c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32h48v-52.9C42.5 123.7 16 90.8 16 64c0-17.7 14.3-32 32-32 28.8 0 64.6 30.5 78.1 44.5C158.2 50.2 210.2 16 320 16s161.8 34.2 193.9 60.5C527.4 62.5 563.2 32 592 32c17.7 0 32 14.3 32 32 0 26.8-26.5 59.7-80 75.1V192h48c17.7 0 32 14.3 32 32zm-64 32H80v160h480V256zM224 136c0 13.3-10.7 24-24 24s-24-10.7-24-24 10.7-24 24-24 24 10.7 24 24zm216-24c-13.3 0-24 10.7-24 24s10.7 24 24 24 24-10.7 24-24-10.7-24-24-24z"/></svg>',
+  laptop: '<svg viewBox="0 0 640 512" width="1em" height="1em"><path d="M255.03 261.65c6.25 6.25 16.38 6.25 22.63 0l11.31-11.31c6.25-6.25 6.25-16.38 0-22.63L253.25 192l35.71-35.72c6.25-6.25 6.25-16.38 0-22.63l-11.31-11.31c-6.25-6.25-16.38-6.25-22.63 0l-58.34 58.34c-6.25 6.25-6.25 16.38 0 22.63l58.35 58.34zm96.01-11.3l11.31 11.31c6.25 6.25 16.38 6.25 22.63 0l58.34-58.34c6.25-6.25 6.25-16.38 0-22.63l-58.34-58.34c-6.25-6.25-16.38-6.25-22.63 0l-11.31 11.31c-6.25 6.25-6.25 16.38 0 22.63L386.75 192l-35.71 35.72c-6.25 6.25-6.25 16.38 0 22.63zM624 416H381.54c-.74 19.81-14.71 32-32.74 32H288c-18.69 0-33.02-17.47-32.77-32H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h608c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zM480 96H160c-17.7 0-32 14.3-32 32v256h384V128c0-17.7-14.3-32-32-32zm0 256H160V128h320v224z"/></svg>',
+  gamepad: '<svg viewBox="0 0 640 512" width="1em" height="1em"><path d="M474.95 64.17C400.85 62.75 368.9 96 320 96s-80.85-33.25-154.95-31.83C74.35 65.92 0 145.48 0 237.11c0 46.46 18.8 105.88 42.35 148.84C67.2 431.33 90.61 448 114.8 448c54.98 0 60-48 106.6-48h197.2c46.6 0 51.62 48 106.6 48 24.19 0 47.6-16.67 72.45-62.05C621.2 342.99 640 283.57 640 237.11c0-91.63-74.35-171.19-165.05-172.94zM192 256v32c0 8.84-7.16 16-16 16h-32v32c0 8.84-7.16 16-16 16H96c-8.84 0-16-7.16-16-16v-32H48c-8.84 0-16-7.16-16-16v-32c0-8.84 7.16-16 16-16h32v-32c0-8.84 7.16-16 16-16h32c8.84 0 16 7.16 16 16v32h32c8.84 0 16 7.16 16 16zm240 64c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm64-80c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"/></svg>',
+  tools: '<svg viewBox="0 0 512 512" width="1em" height="1em"><path d="M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3-11.3-67.9 74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"/></svg>',
+  school: '<svg viewBox="0 0 640 512" width="1em" height="1em"><path d="M604.94 208.64L320 64 35.06 208.64c-8.83 4.48-8.83 17.07 0 21.54L96 261.25V432c0 8.84 7.16 16 16 16h96c8.84 0 16-7.16 16-16v-96c0-17.67 14.33-32 32-32h128c17.67 0 32 14.33 32 32v96c0 8.84 7.16 16 16 16h96c8.84 0 16-7.16 16-16V261.25l60.94-31.08c8.83-4.47 8.83-17.06 0-21.53zM320 352c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48z"/></svg>',
+  trophy: '<svg viewBox="0 0 576 512" width="1em" height="1em"><path d="M552 64H448V24c0-13.3-10.7-24-24-24H152c-13.3 0-24 10.7-24 24v40H24C10.7 64 0 74.7 0 88v56c0 66.5 77.9 131.7 160 138v22c0 35.3 28.7 64 64 64h24v64h-56c-13.3 0-24 10.7-24 24v32c0 13.3 10.7 24 24 24h192c13.3 0 24-10.7 24-24v-32c0-13.3-10.7-24-24-24h-56v-64h24c35.3 0 64-28.7 64-64v-22c82.1-6.3 160-71.5 160-138V88c0-13.3-10.7-24-24-24zM64 144v-16h64v87.7C90.8 205.9 64 172.4 64 144zm448 0c0 28.4-26.8 61.9-64 71.7V128h64v16z"/></svg>',
+  globe: '<svg viewBox="0 0 496 512" width="1em" height="1em"><path d="M336.5 16cC323.2 16 312.5 26.7 312.5 40s10.7 24 24 24 24-10.7 24-24-10.8-24-24-24zM248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm144 320h-40c-13.2 0-24-10.8-24-24V208c0-13.2-10.8-24-24-24h-48c-13.2 0-24 10.8-24 24v168h-56V208c0-13.2-10.8-24-24-24h-48c-13.2 0-24 10.8-24 24v96H88c-13.2 0-24 10.8-24 24s10.8 24 24 24h40c13.2 0 24-10.8 24-24v-96h32v168c0 13.2 10.8 24 24 24h56c13.2 0 24-10.8 24-24V232h32v72c0 13.2 10.8 24 24 24h48c13.2 0 24-10.8 24-24s-10.8-24-24-24z" transform="scale(0.9) translate(26 26)"/></svg>',
+  lock: '<svg viewBox="0 0 448 512" width="1em" height="1em"><path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"/></svg>',
+  arrowup: '<svg viewBox="0 0 448 512" width="1em" height="1em"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg>',
+};
+
+let lang = "zh";
+
+function t(k) { return i18n[lang][k] || k; }
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+function applyI18n() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.getAttribute("data-i18n")); });
+  document.getElementById("lang-btn").textContent = lang === "zh" ? "EN" : "中文";
+  renderHighlights(); renderTimeline(); renderProjects(); renderSkills(); renderBadges();
+}
+
+function renderBadges() {
+  document.getElementById("skill-badges").innerHTML = resume.badges.map((b) => `<span>${esc(b)}</span>`).join("");
+}
+function renderHighlights() {
+  document.getElementById("highlights-grid").innerHTML = resume.highlights.map((h) => `
+    <div class="card highlight-card">
+      <div class="highlight-number">${h.number}</div>
+      <div class="highlight-label">${esc(h.label[lang])}</div>
+      <div class="highlight-desc">${esc(h.desc[lang])}</div>
+    </div>`).join("");
+}
+function timelineHTML(entries) {
+  return entries.map((e) => `
+    <div class="timeline-item">
+      <span class="timeline-dot"></span>
+      <div class="timeline-date">${esc(e.date)}</div>
+      <div class="timeline-title">${esc(e.title)}</div>
+      <div class="timeline-company">${esc(e.company)}</div>
+      <div class="timeline-desc">${esc(e.desc)}</div>
+    </div>`).join("");
+}
+function renderTimeline() {
+  document.getElementById("tl-work").innerHTML = timelineHTML([
+    { date: "2026.08 - 至今", title: t("work_title"), company: t("work_company"), desc: t("work_desc") },
+  ]);
+  document.getElementById("tl-campus").innerHTML = timelineHTML([
+    { date: "2026.09 - 至今", title: t("campus_title"), company: "山西科技学院 · 资源循环科学与工程", desc: t("campus_desc") },
+  ]);
+}
+function parseTech(s) { try { const a = JSON.parse(s); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function renderProjects() {
+  const card = (p) => `
+    <div class="card project-card">
+      <div class="project-image">${esc(p.icon)}</div>
+      <div class="project-content">
+        <h3 class="project-title">${esc(lang === "zh" ? p.title_zh : p.title_en)}</h3>
+        <div class="project-tech">${parseTech(p.tech).map((tag) => `<span class="tech-tag">${esc(tag)}</span>`).join("")}</div>
+        <p class="project-desc">${esc(lang === "zh" ? p.desc_zh : p.desc_en)}</p>
+        ${p.demo && p.link ? `<a href="${p.link}" target="_blank" rel="noopener noreferrer" class="project-link">${FA.globe} ${t("demo")}</a>` : `<span class="project-internal">${p.demo ? FA.globe : FA.lock} ${p.demo ? t("demo") : t("internal")}</span>`}
+      </div>
+    </div>`;
+  const games = resume.projects.filter((p) => p.category === "game");
+  const ais = resume.projects.filter((p) => p.category === "ai");
+  document.getElementById("pg-game").innerHTML = games.map(card).join("");
+  document.getElementById("pg-ai").innerHTML = ais.map(card).join("");
+}
+function renderSkills() {
+  const cats = [
+    { key: "ai", icon: FA.robot, key2: "skill_cat_ai" },
+    { key: "frontend", icon: FA.laptop, key2: "skill_cat_frontend" },
+    { key: "gamedev", icon: FA.gamepad, key2: "skill_cat_gamedev" },
+    { key: "tools", icon: FA.tools, key2: "skill_cat_tools" },
+  ];
+  document.getElementById("skills-grid").innerHTML = cats.map((c) => `
+    <div class="card skill-category">
+      <div class="skill-category-title"><span class="cat-icon">${c.icon}</span>${t(c.key2)}</div>
+      ${resume.skills[c.key].map((s) => `
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">${esc(s.name)}</span><span class="skill-level">${esc(s.levelText)}</span></div>
+          <div class="skill-bar"><div class="skill-progress" data-level="${s.level}"></div></div>
+        </div>`).join("")}
+    </div>`).join("");
+  observeSkills();
+}
+
+function observeSkills() {
+  const grid = document.getElementById("skills-grid");
+  const ob = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) {
+      grid.querySelectorAll(".skill-progress").forEach((el) => { el.style.width = el.dataset.level + "%"; });
+      ob.disconnect();
+    }
+  }), { threshold: 0.15 });
+  ob.observe(grid);
+}
+function observeSections() {
+  const ob = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("visible"); ob.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll(".section").forEach((s) => ob.observe(s));
+}
+
+let toastTimer = 0;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
+}
+function copyText(text, msg) {
+  const done = () => showToast(msg);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(done);
+  } else {
+    const input = document.createElement("input");
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+    done();
+  }
+}
+
+function initTabs(rootId) {
+  const root = document.getElementById(rootId);
+  root.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      root.querySelectorAll(".tab-btn").forEach((b) => { b.classList.remove("active"); b.setAttribute("aria-selected", "false"); });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+      root.querySelectorAll(".tab-panel").forEach((p) => {
+        p.style.display = p.getAttribute("data-panel") === btn.getAttribute("data-tab") ? "" : "none";
+      });
+    });
+  });
+}
+
+function setTheme(dark) {
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  document.getElementById("theme-btn").innerHTML = dark ? FA.sun : FA.moon;
+  document.getElementById("forest-base").style.backgroundImage = `url(${dark ? IMG.dew : IMG.base})`;
+}
+let isDark = true;
+
+function initSunlight() {
+  const mq = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const sun = document.getElementById("sunlight");
+  let enabled = false;
+  let raf = 0;
+  const pos = { x: -600, y: -600 };
+  const target = { x: -600, y: -600 };
+  const onMove = (e) => { target.x = e.clientX; target.y = e.clientY; };
+  const loop = () => {
+    pos.x += (target.x - pos.x) * 0.08;
+    pos.y += (target.y - pos.y) * 0.08;
+    sun.style.transform = `translate(${pos.x - 260}px, ${pos.y - 260}px)`;
+    raf = requestAnimationFrame(loop);
+  };
+  const check = () => {
+    const on = mq.matches && !reduced.matches;
+    if (on === enabled) return;
+    enabled = on;
+    sun.style.display = on ? "" : "none";
+    if (on) { window.addEventListener("mousemove", onMove); raf = requestAnimationFrame(loop); }
+    else { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); }
+  };
+  check();
+  mq.addEventListener("change", check);
+  reduced.addEventListener("change", check);
+}
+
+function initBadge() {
+  const wrap = document.getElementById("badge-scene");
+  const card = document.getElementById("badge-card");
+  const holoA = document.getElementById("holo-a");
+  const holoB = document.getElementById("holo-b");
+  const holoC = document.getElementById("holo-c");
+  const holoGradient = "linear-gradient(115deg, transparent 0%, rgba(168,85,247,0.85) 18%, rgba(96,165,250,0.8) 34%, rgba(255,255,255,0.9) 46%, rgba(74,222,128,0.75) 62%, rgba(248,113,113,0.7) 80%, transparent 100%)";
+  [holoA, holoB, holoC].forEach((el) => { el.style.background = holoGradient; });
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  if (reduced.matches) return;
+  const rot = { x: 0, y: 0 };
+  const targetRot = { x: 0, y: 0 };
+  const apply = (px, py) => { targetRot.x = -py * 22; targetRot.y = px * 22; };
+  const onMove = (e) => {
+    const r = wrap.getBoundingClientRect();
+    const inside = e.clientX > r.left - 100 && e.clientX < r.right + 100 && e.clientY > r.top - 100 && e.clientY < r.bottom + 100;
+    if (!inside) { targetRot.x = 0; targetRot.y = 0; return; }
+    apply((e.clientX - r.left) / r.width - 0.5, (e.clientY - r.top) / r.height - 0.5);
+  };
+  const onTouch = (e) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    const r = wrap.getBoundingClientRect();
+    apply((touch.clientX - r.left) / r.width - 0.5, (touch.clientY - r.top) / r.height - 0.5);
+  };
+  const onTouchEnd = () => { targetRot.x = 0; targetRot.y = 0; };
+  const onOrient = (e) => {
+    if (e.gamma == null || e.beta == null) return;
+    apply(Math.max(-0.5, Math.min(0.5, e.gamma / 60)), Math.max(-0.5, Math.min(0.5, (e.beta - 40) / 60)));
+  };
+  window.addEventListener("mousemove", onMove);
+  if (isTouch) {
+    window.addEventListener("touchmove", onTouch, { passive: true });
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("deviceorientation", onOrient);
+  }
+  const loop = () => {
+    rot.x += (targetRot.x - rot.x) * 0.1;
+    rot.y += (targetRot.y - rot.y) * 0.1;
+    card.style.transform = `rotateX(${rot.x}deg) rotateY(${rot.y}deg)`;
+    const shift = (el, f) => { el.style.backgroundPosition = `${50 + rot.y * f}% ${50 + rot.x * f}%`; };
+    shift(holoA, 3); shift(holoB, -3); shift(holoC, 2);
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+}
+
+function initDust() {
+  const box = document.getElementById("dust-box");
+  let html = "";
+  for (let i = 0; i < 18; i++) {
+    const left = ((i * 53 + 7) % 100) + "%";
+    const top = (30 + ((i * 37) % 65)) + "%";
+    const size = 3 + ((i * 7) % 6);
+    const delay = ((i * 1.7) % 14) + "s";
+    const duration = (11 + ((i * 3) % 10)) + "s";
+    const gold = i % 3 === 0;
+    html += `<span class="dust" style="left:${left};top:${top};width:${size}px;height:${size}px;animation-delay:${delay};animation-duration:${duration};background:${gold ? "radial-gradient(circle, rgba(252,211,77,0.95) 0%, rgba(252,211,77,0) 70%)" : "radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%)"};box-shadow:${gold ? "0 0 8px rgba(251,191,36,0.6)" : "0 0 6px rgba(255,255,255,0.5)"}"></span>`;
+  }
+  box.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("i-leaf").innerHTML = FA.leaf;
+  document.getElementById("i-cap").innerHTML = FA.cap;
+  document.getElementById("i-mobile").innerHTML = FA.mobile;
+  document.getElementById("i-comment").innerHTML = FA.comment;
+  document.getElementById("i-github").innerHTML = FA.github;
+  document.getElementById("i-envelope").innerHTML = FA.envelope;
+  document.getElementById("i-magic").innerHTML = FA.magic;
+  document.getElementById("i-briefcase").innerHTML = FA.briefcase;
+  document.getElementById("i-rocket").innerHTML = FA.rocket;
+  document.getElementById("i-toolbox").innerHTML = FA.toolbox;
+  document.getElementById("i-grad").innerHTML = FA.grad;
+  document.getElementById("i-school").innerHTML = FA.school;
+  document.getElementById("i-trophy").innerHTML = FA.trophy;
+  document.getElementById("print-btn").innerHTML = FA.print;
+  document.getElementById("menu-btn").innerHTML = FA.bars;
+  document.getElementById("back-top").innerHTML = FA.arrowup;
+
+  document.getElementById("forest-rays").style.backgroundImage = `url(${IMG.rays})`;
+  document.getElementById("tree-left").style.backgroundImage = `url(${IMG.left})`;
+  document.getElementById("tree-right").style.backgroundImage = `url(${IMG.leaves})`;
+  document.getElementById("avatar").src = IMG.avatar;
+  document.getElementById("github-link").href = resume.contact.github;
+
+  setTheme(true);
+  initDust();
+  initTabs("tabs-exp");
+  initTabs("tabs-proj");
+  observeSections();
+  initSunlight();
+  initBadge();
+  applyI18n();
+
+  document.getElementById("lang-btn").addEventListener("click", () => { lang = lang === "zh" ? "en" : "zh"; applyI18n(); });
+  document.getElementById("theme-btn").addEventListener("click", () => { isDark = !isDark; setTheme(isDark); });
+  document.getElementById("print-btn").addEventListener("click", () => window.print());
+  document.getElementById("menu-btn").addEventListener("click", () => showToast(t("menu_tip")));
+  document.getElementById("copy-phone").addEventListener("click", () => copyText(resume.contact.phone, t("copied_phone")));
+  document.getElementById("copy-wechat").addEventListener("click", () => copyText(resume.contact.wechat, t("copied_wechat")));
+  document.getElementById("copy-email").addEventListener("click", () => copyText(resume.contact.email, t("copied_email")));
+
+  const backTop = document.getElementById("back-top");
+  window.addEventListener("scroll", () => backTop.classList.toggle("visible", window.scrollY > 300));
+  backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+});
+</script>
+</body>
+</html>
